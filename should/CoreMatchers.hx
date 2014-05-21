@@ -1,21 +1,22 @@
 package should;
 
 import should.Matcher;
+import should.MatcherPlus;
 
 class CoreMatchers  {
-	public static inline function beTrue(): Matcher<Bool> {
+	public static inline function beTrue(): MatcherPlus<Bool> {
 		return new CoreTrueMatcher();
 	}
 
-	public static inline function beNull(): Matcher<Dynamic> {
+	public static inline function beNull(): MatcherPlus<Dynamic> {
 		return new CoreNullMatcher();
 	}
 
-	public static inline function beEqualTo<T>(expected: T): Matcher<T> {
+	public static inline function beEqualTo<T>(expected: T): MatcherPlus<T> {
 		return new CoreEqualToMatcher<T>(expected);
 	}
 
-	public static inline function not<T>(matcher: Matcher<T>): Matcher<T> {
+	public static inline function not<T>(matcher: MatcherPlus<T>): MatcherPlus<T> {
 		return new CoreNotToMatcher<T>(matcher);
 	}
 }

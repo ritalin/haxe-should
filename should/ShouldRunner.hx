@@ -9,7 +9,7 @@ class ShouldRunner<T> {
 		this.actualVal = val;
 	}
 
-	public function should(constraint: Matcher<T>): Void {
+	public function should(constraint: MatcherPlus<T>): Void {
 
 	}
 }
