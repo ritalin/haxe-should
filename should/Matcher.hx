@@ -1,9 +1,12 @@
 package should;
 
-typedef EvalResult = {
+import haxe.ds.Option;
 
+enum EvalResult {
+	Pass;
+	Failed(message: String);
 }
 
 interface Matcher<T> {
-	function evaluate(actual: T, negate: Bool): EvalResult;
+	function evaluate(comment: String, actual: T, negate: Bool): EvalResult;
 }

@@ -1,3 +1,5 @@
 -cp .
 -main Main
 -js test.js
+-lib munit
+--macro should.ext.MassiveUnitBehavior.apply()

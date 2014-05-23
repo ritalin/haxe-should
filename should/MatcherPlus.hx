@@ -28,17 +28,16 @@ private class CoreAndMatcher<T> implements Matcher<T> {
 
 	}
 
-	public function evaluate(actual: T, negate: Bool): should.EvalResult {
-		return {};
+	public function evaluate(comment: String, actual: T, negate: Bool): EvalResult {
+		return EvalResult.Failed('Not Implemented');
 	}
 }
 
 private class CoreOrMatcher<T> implements Matcher<T> {
 	public function new(lhs: Matcher<T>, rhs: Matcher<T>) {
-
 	}
 
-	public function evaluate(actual: T, negate: Bool): should.EvalResult {
-		return {};
+	public function evaluate(comment: String, actual: T, negate: Bool): should.EvalResult {
+		return EvalResult.Failed('Not Implemented');
 	}
 }

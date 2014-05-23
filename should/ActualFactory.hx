@@ -11,11 +11,11 @@ class ActualFactory {
 		return new ActualFactory(comment);
 	}
 
-	public function val<T>(actual: T): ShouldRunner<T> {
-		return new ShouldRunner<T>(this.comment, actual);
+	public function val<T>(actual: T) {
+		return ShouldRunner.valueEvaluationRunSpec(this.comment, actual);
 	}
 
-	public function call(closure: Void -> Void): ShouldRunner<Void -> Void> {
-		return new ShouldRunner<Void -> Void>(this.comment, closure);
+	public function call(closure: Void -> Void) {
+		return ShouldRunner.callEvaluationRunSpec(this.comment, closure);
 	}
 }
