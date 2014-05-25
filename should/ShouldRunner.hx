@@ -1,5 +1,7 @@
 package should;
 
+import should.Matcher;
+
 class ShouldRunner {
 	public static function valueEvaluationRunSpec<T>(comment: String, actualValue: T) {
 		return new ValueEvaluateRunSpec<T>(comment, actualValue);
@@ -19,11 +21,11 @@ private class ValueEvaluateRunSpec<T> {
 		this.actualValue = actualValue;
 	}
 
-	public function should(matcher: Matcher<T>): Void {
-		var result = matcher.evaluate(this.comment, this.actualValue, false);
+	public function should<U>(matcher: Matcher<U>): Void {
+		var result = matcher.evaluate(this.comment, cast(this.actualValue), false);
 
 		switch (result) {
-		case Failed(message): Behavior.fail(message);
+		case EvalResult.Failed(message): Behavior.fail(message);
 		default:
 		}
 	}
@@ -51,7 +53,7 @@ private class CallEvaluateRunSpec {
 		;
 
 		switch (result) {
-		case Failed(message): Behavior.fail(message);
+		case EvalResult.Failed(message): Behavior.fail(message);
 		default:
 		}
 	}

@@ -24,20 +24,39 @@ abstract MatcherPlus<T>(Matcher<T>) to Matcher<T> {
 }
 
 private class CoreAndMatcher<T> implements Matcher<T> {
-	public function new(lhs: Matcher<T>, rhs: Matcher<T>) {
+	private var lhs: Matcher<T>;
+	private var rhs: Matcher<T>;
 
+	public function new(lhs: Matcher<T>, rhs: Matcher<T>) {
+		this.lhs = lhs;
+		this.rhs = rhs;
 	}
 
 	public function evaluate(comment: String, actual: T, negate: Bool): EvalResult {
-		return EvalResult.Failed('Not Implemented');
+		return
+			switch (lhs.evaluate(comment, actual, negate)) {
+			case result = Failed(_): result;
+			case Pass: rhs.evaluate(comment, actual, negate);
+			}
+		;
 	}
 }
 
 private class CoreOrMatcher<T> implements Matcher<T> {
+	private var lhs: Matcher<T>;
+	private var rhs: Matcher<T>;
+	
 	public function new(lhs: Matcher<T>, rhs: Matcher<T>) {
+		this.lhs = lhs;
+		this.rhs = rhs;
 	}
 
 	public function evaluate(comment: String, actual: T, negate: Bool): should.EvalResult {
-		return EvalResult.Failed('Not Implemented');
+		return
+			switch (lhs.evaluate(comment, actual, negate)) {
+			case result = Pass: result;
+			case Failed(_): rhs.evaluate(comment, actual, negate);
+			}
+		;
 	}
 }
