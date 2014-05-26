@@ -44,47 +44,87 @@ class ShouldTest {
 
 	@Test
 	public function testShouldBeTrue():Void {
+		its('bool value[success]').val(true).should(beTrue);
+
 		this.runFailTest(
-			function() { its('bool value').val(false).should(beTrue); return 'bool value'; }
+			function() { its('bool value[failed]').val(false).should(beTrue); return 'bool value'; }
 		);
 	}
 	
 	@Test
 	public function testShouldBeNull():Void {
+		its('structure value[success]').val(null).should(beNull);
+
 		this.runFailTest(
-			function() { its('int value').val(100).should(beNull); return 'int value'; }
+			function() { its('int value[failed]').val(100).should(beNull); return 'int value[failed]'; }
 		);
 		this.runFailTest(
-			function() { its('float value').val(123.4).should(beNull); return 'float value'; }
+			function() { its('float value[failed]').val(123.4).should(beNull); return 'float value[failed]'; }
 		);
 		this.runFailTest(
-			function() { its('bool value').val(false).should(beNull); return 'bool value'; }
+			function() { its('bool value[failed]').val(false).should(beNull); return 'bool value[failed]'; }
 		);
 		this.runFailTest(
-			function() { its('structure value').val({ key: 12345 }).should(beNull); return 'structure value'; }
+			function() { its('structure value[failed]').val({ key: 12345 }).should(beNull); return 'structure value[failed]'; }
 		);
 	}	
 
 	@Test
 	public function testShouldBeEqual():Void {
+		its('int value[success]').val(100).should(beEqualTo(100));
+
 		this.runFailTest(
-			function() { its('int value').val(100).should(beEqualTo(123)); return 'int value'; }
+			function() { its('int value[failed]').val(100).should(beEqualTo(123)); return 'int value[failed]'; }
 		);
+
+		its('float value[success]').val(123.4).should(beEqualTo(123.4));
+
 		this.runFailTest(
-			function() { its('float value').val(123.4).should(beEqualTo(123)); return 'float value'; }
+			function() { its('float value[failed]').val(123.4).should(beEqualTo(123)); return 'float value[failed]'; }
 		);
+
+		its('bool value[success]').val(false).should(beEqualTo(false));
+
 		this.runFailTest(
-			function() { its('bool value').val(false).should(beEqualTo(true)); return 'bool value'; }
+			function() { its('bool value[failed]').val(false).should(beEqualTo(true)); return 'bool value[failed]'; }
 		);
+
+		its('structure value[success]').val({ key: 12345 }).should(beEqualTo({ key: 12345 }));
+
 		this.runFailTest(
-			function() { its('structure value').val({ key: 12345 }).should(beEqualTo({ key: 1234 })); return 'structure value'; }
+			function() { its('structure value[failed]').val({ key: 12345 }).should(beEqualTo({ key: 1234 })); return 'structure value[failed]'; }
 		);
 	}
 
 	@Test
 	public function testShouldNot() {
+		its('int value[success]').val(100).should( not( beEqualTo(123) ));
+
 		this.runFailTest(
-			function() { its('int value').val(100).should( not( beEqualTo(100) )); return 'int value'; }
+			function() { its('int value[failed]').val(100).should( not( beEqualTo(100) )); return 'int value[failed]'; }
+		);
+	}
+
+	@Test
+	public function testShouldOr() {
+		its('float value[success]').val(123.4).should(beEqualTo(123) || beEqualTo(123.4));
+
+		this.runFailTest(
+			function() { its('float value[failed]').val(123.4).should(beEqualTo(123) || beEqualTo(123.5)); return 'float value[failed]'; }
+		);
+	}
+
+	@Test
+	public function testShouldAnd() {
+		var target = { key1: 12345, key2: 'qwerty' };
+
+		its('structure value[success]').val(target).should( not( beNull ) && beEqualTo({ key1: 12345, key2: 'qwerty' }));
+
+		this.runFailTest(
+			function() { 
+				its('structure value[failed]').val({ key: 1234 }).should(beEqualTo({ key1: 12345, key2: 'abcdef' })); 
+				return 'structure value[failed]'; 
+			}
 		);
 	}
 }

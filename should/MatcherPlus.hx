@@ -4,12 +4,12 @@ import should.Matcher;
 
 abstract MatcherPlus<T>(Matcher<T>) to Matcher<T> {
 	@:op(A && B)
-	public static function combinWithAnd<U>(lhs: MatcherPlus<U>, rhs: MatcherPlus<U>): MatcherPlus<U> {
+	public static function combinWithAnd<U, V>(lhs: MatcherPlus<U>, rhs: MatcherPlus<V>): MatcherPlus<Dynamic> {
 		return new CoreAndMatcher(lhs, rhs);
 	}
 
 	@:op(A || B)
-	public static function combinWithOr<U>(lhs: MatcherPlus<U>, rhs: MatcherPlus<U>): MatcherPlus<U> {
+	public static function combinWithOr<U, V>(lhs: MatcherPlus<U>, rhs: MatcherPlus<V>): MatcherPlus<Dynamic> {
 		return new CoreOrMatcher(lhs, rhs);
 	}
 
@@ -23,16 +23,16 @@ abstract MatcherPlus<T>(Matcher<T>) to Matcher<T> {
 	}
 }
 
-private class CoreAndMatcher<T> implements Matcher<T> {
-	private var lhs: Matcher<T>;
-	private var rhs: Matcher<T>;
+private class CoreAndMatcher<U, V> implements Matcher<Dynamic> {
+	private var lhs: Matcher<U>;
+	private var rhs: Matcher<V>;
 
-	public function new(lhs: Matcher<T>, rhs: Matcher<T>) {
+	public function new(lhs: Matcher<U>, rhs: Matcher<V>) {
 		this.lhs = lhs;
 		this.rhs = rhs;
 	}
 
-	public function evaluate(comment: String, actual: T, negate: Bool): EvalResult {
+	public function evaluate(comment: String, actual: Dynamic, negate: Bool): EvalResult {
 		return
 			switch (lhs.evaluate(comment, actual, negate)) {
 			case result = Failed(_): result;
@@ -42,16 +42,16 @@ private class CoreAndMatcher<T> implements Matcher<T> {
 	}
 }
 
-private class CoreOrMatcher<T> implements Matcher<T> {
-	private var lhs: Matcher<T>;
-	private var rhs: Matcher<T>;
+private class CoreOrMatcher<U, V> implements Matcher<Dynamic> {
+	private var lhs: Matcher<U>;
+	private var rhs: Matcher<V>;
 	
-	public function new(lhs: Matcher<T>, rhs: Matcher<T>) {
+	public function new(lhs: Matcher<U>, rhs: Matcher<V>) {
 		this.lhs = lhs;
 		this.rhs = rhs;
 	}
 
-	public function evaluate(comment: String, actual: T, negate: Bool): should.EvalResult {
+	public function evaluate(comment: String, actual: Dynamic, negate: Bool): should.EvalResult {
 		return
 			switch (lhs.evaluate(comment, actual, negate)) {
 			case result = Pass: result;
