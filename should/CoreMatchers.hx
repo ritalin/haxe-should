@@ -29,7 +29,7 @@ private class CoreTrueMatcher implements Matcher<Bool> {
 
 	public function evaluate(comment: String, actual: Bool, negate: Bool): should.EvalResult {
 		return 
-			if (actual || negate) {
+			if (CoreMatcherHelper.xor(actual, negate)) {
 				EvalResult.Pass;
 			}
 			else {
@@ -45,11 +45,11 @@ private class CoreNullMatcher implements Matcher<Dynamic> {
 
 	public function evaluate(comment: String, actual: Dynamic, negate: Bool): should.EvalResult {
 		return 
-			if ((actual == null) || negate) {
+			if (CoreMatcherHelper.xor(actual == null, negate)) {
 				EvalResult.Pass;
 			}
 			else {
-				var a = ResultFormatter.format(actual);
+				var a = CoreMatcherHelper.format(actual);
 				var n = negate ? '' : 'not ';
 				EvalResult.Failed('The actual value (${comment}) was ${n}nil.\n\t-actual: ${a}');
 			}
@@ -74,12 +74,12 @@ private class CoreEqualToMatcher<T> implements Matcher<T> {
 		;		
 
 		return 
-			if (result) {
+			if (CoreMatcherHelper.xor(result, negate)) {
 				EvalResult.Pass;
 			}
 			else {
-				var a = ResultFormatter.format(actual);
-				var e = ResultFormatter.format(this.expected);
+				var a = CoreMatcherHelper.format(actual);
+				var e = CoreMatcherHelper.format(this.expected);
 				var n = negate ? '' : 'not ';
 
 				EvalResult.Failed(
@@ -102,7 +102,11 @@ private class CoreNotMatcher<T> implements Matcher<T> {
 	}
 }
 
-private class ResultFormatter {
+private class CoreMatcherHelper {
+	public static function xor(lhs: Bool, rhs: Bool): Bool {
+		return (lhs || rhs) && (! (lhs && rhs));
+	}
+
 	public static function format(value: Dynamic): String {
 		return
 			switch (Type.typeof(value)) {
