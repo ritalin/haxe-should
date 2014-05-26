@@ -55,7 +55,7 @@ class ShouldTest {
 			function() { its('int value').val(100).should(beNull); return 'int value'; }
 		);
 		this.runFailTest(
-			function() { its('float value').val(123.4).should(beNull);return 'float value'; }
+			function() { its('float value').val(123.4).should(beNull); return 'float value'; }
 		);
 		this.runFailTest(
 			function() { its('bool value').val(false).should(beNull); return 'bool value'; }
@@ -78,6 +78,13 @@ class ShouldTest {
 		);
 		this.runFailTest(
 			function() { its('structure value').val({ key: 12345 }).should(beEqualTo({ key: 1234 })); return 'structure value'; }
+		);
+	}
+
+	@Test
+	public function testShouldNot() {
+		this.runFailTest(
+			function() { its('int value').val(100).should( not( beEqualTo(100) )); return 'int value'; }
 		);
 	}
 }
