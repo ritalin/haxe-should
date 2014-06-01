@@ -4,6 +4,7 @@ import haxe.EnumTools;
 
 import should.Matcher;
 import should.MatcherPlus;
+import Type;
 
 class CoreMatchers  {
 	public static var beTrue(get, null): MatcherPlus<Bool>;
@@ -15,6 +16,10 @@ class CoreMatchers  {
 
 	public static inline function not<T>(matcher: MatcherPlus<T>): MatcherPlus<T> {
 		return new CoreNotMatcher<T>(matcher);
+	}
+
+	public static inline function beThrown<T>(expected: T): MatcherPlus<T> {
+		return new CoreThrowExceptionMatcher<T>(expected);
 	}
 
 	private static var _beTrue: MatcherPlus<Bool> = new CoreTrueMatcher();
@@ -87,6 +92,18 @@ private class CoreEqualToMatcher<T> implements Matcher<T> {
 				);
 			}
 		;
+	}
+}
+
+private class CoreThrowExceptionMatcher<T> implements Matcher<T> {
+	private var matcher: Matcher<T>;
+
+	public function new(expected: T) {
+		this.matcher = new CoreEqualToMatcher<T>(expected);
+	}
+
+	public function evaluate(comment: String, actual: T, negate: Bool): should.EvalResult {
+		return this.matcher.evaluate(comment, actual, negate);
 	}
 }
 

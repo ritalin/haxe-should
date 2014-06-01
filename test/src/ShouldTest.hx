@@ -127,4 +127,63 @@ class ShouldTest {
 			}
 		);
 	}
+
+	private function raiseException(error: Dynamic) {
+		throw error;
+	}
+
+	@Test
+	public function testSuccessForShouldThrow() {
+		its('throw string').call(
+			function () {
+				raiseException('exception captured.');
+			}
+		)
+		.should(beThrown('exception captured.'));
+
+		its('throw int').call(
+			function () {
+				raiseException(1024);
+			}
+		)
+		.should(beThrown(1024));
+
+		var errObj = { message: 'object thrown.' }
+
+		its('throw object').call(
+			function () {
+				raiseException(errObj);
+			}
+		)
+		.should(beThrown(errObj));
+	}
+
+	@Test
+	public function testFailedForShouldThrow() {
+		this.runFailTest(
+			function() { 
+				its('throw string 1').call(
+					function () {
+						raiseException('another exception.');
+					}
+				)
+				.should(beThrown('exception captured.'));
+
+				return 'throw string 1';
+			}
+		);
+
+		this.runFailTest(
+			function() { 
+				its('throw string 2').call(
+					function () {
+						raiseException('string thrown');
+					}
+				)
+				.should(beThrown(1024));
+
+				return 'throw string 2';
+			}
+		);
+	}
 }
